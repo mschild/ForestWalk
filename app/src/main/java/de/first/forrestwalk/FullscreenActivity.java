@@ -1,12 +1,18 @@
 package de.first.forrestwalk;
 
 import android.annotation.SuppressLint;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -83,6 +89,12 @@ public class FullscreenActivity extends AppCompatActivity {
         }
     };
 
+
+    private SensorManager sensorManager;
+
+    private Sensor gyroscopeSensor;
+    private SensorEventListener gyroscopeSensorListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,7 +118,50 @@ public class FullscreenActivity extends AppCompatActivity {
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
         findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+
+
+        // Initialize sensor manager
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+
+        // Using gyroscope sensor
+        gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+
+        if(gyroscopeSensor == null) {
+            Log.e("Oh damn it.", "Gyroscope sensor not available.");
+            finish();
+        }
+
+        this.gyroscopeSensorListener = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent sensorEvent) {
+
+                Log.i("Sensor Data Changed:",Float.toString(sensorEvent.values[2]));
+                TextView textView = findViewById(R.id.TextViewTEST);
+
+                textView.setText(Float.toString(sensorEvent.values[2]));
+
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int i) {
+            }
+        };
+
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sensorManager.registerListener(gyroscopeSensorListener,
+                gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(gyroscopeSensorListener);
+    }
+
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {

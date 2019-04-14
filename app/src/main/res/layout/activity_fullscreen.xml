@@ -46,6 +46,16 @@
                 android:text="@string/dummy_button" />
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/TextViewTEST"
+            android:layout_width="439dp"
+            android:layout_height="179dp"
+            android:layout_marginTop="40dp"
+            android:text="TEST"
+            android:textSize="30sp" />
+
+
     </FrameLayout>
 
 </FrameLayout>
