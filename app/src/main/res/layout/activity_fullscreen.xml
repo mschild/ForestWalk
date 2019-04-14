@@ -63,6 +63,30 @@
             android:text="TEST"
             android:textSize="30sp" />
 
+        <TextView
+            android:id="@+id/X-RotVec"
+            android:layout_width="439dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="120dp"
+            android:text="TEST"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/Y-RotVec"
+            android:layout_width="439dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="160dp"
+            android:text="TEST"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/Z-RotVec"
+            android:layout_width="439dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="200dp"
+            android:text="TEST"
+            android:textSize="30sp" />
+
 
     </FrameLayout>
 

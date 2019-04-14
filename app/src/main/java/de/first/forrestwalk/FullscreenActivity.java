@@ -159,6 +159,31 @@ public class FullscreenActivity extends AppCompatActivity {
                 Log.i("Sensor Data Changed:",Float.toString(sensorEvent.values[2]));
                 TextView textView = findViewById(R.id.RotationVectorSensorText);
 
+                float[] rotationMatrix = new float[16];
+                SensorManager.getRotationMatrixFromVector(rotationMatrix, sensorEvent.values);
+
+                // Remap coordinate system
+                float[] remappedRotationMatrix = new float[16];
+                SensorManager.remapCoordinateSystem(rotationMatrix,
+                        SensorManager.AXIS_X,
+                        SensorManager.AXIS_Z,
+                        remappedRotationMatrix);
+
+                // Convert to orientations
+                float[] orientations = new float[3];
+                SensorManager.getOrientation(remappedRotationMatrix, orientations);
+
+                for(int i = 0; i < 3; i++) {
+                    orientations[i] = (float)(Math.toDegrees(orientations[i]));
+                }
+
+                TextView xRotVec = findViewById(R.id.X_RotVec);
+                TextView yRotVec = findViewById(R.id.Y_RotVec);
+                TextView zRotVec = findViewById(R.id.Z_RotVec);
+
+                xRotVec.setText("XRotAngle: " + orientations[1]);
+                yRotVec.setText("YRotAngle: " + orientations[0]);
+                zRotVec.setText("ZRotAngle: " + orientations[2]);
                 textView.setText("RotationVector: " + Float.toString(sensorEvent.values[2]));
             }
 
