@@ -93,7 +93,9 @@ public class FullscreenActivity extends AppCompatActivity {
     private SensorManager sensorManager;
 
     private Sensor gyroscopeSensor;
+    private Sensor rotationVectorSensor;
     private SensorEventListener gyroscopeSensorListener;
+    private SensorEventListener rotationVectorSensorListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,10 +127,14 @@ public class FullscreenActivity extends AppCompatActivity {
 
         // Using gyroscope sensor
         gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        rotationVectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR );
 
-        if(gyroscopeSensor == null) {
+        if(this.gyroscopeSensor == null) {
             Log.e("Oh damn it.", "Gyroscope sensor not available.");
             finish();
+        }
+        if(this.rotationVectorSensor == null) {
+            Log.e("Oh damn it.", "RotationVector sensor not available.");
         }
 
         this.gyroscopeSensorListener = new SensorEventListener() {
@@ -136,9 +142,9 @@ public class FullscreenActivity extends AppCompatActivity {
             public void onSensorChanged(SensorEvent sensorEvent) {
 
                 Log.i("Sensor Data Changed:",Float.toString(sensorEvent.values[2]));
-                TextView textView = findViewById(R.id.TextViewTEST);
+                TextView textView = findViewById(R.id.GyroSensorText);
 
-                textView.setText(Float.toString(sensorEvent.values[2]));
+                textView.setText("Gyro: " + Float.toString(sensorEvent.values[2]));
 
             }
 
@@ -147,19 +153,36 @@ public class FullscreenActivity extends AppCompatActivity {
             }
         };
 
+        this.rotationVectorSensorListener = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent sensorEvent) {
+                Log.i("Sensor Data Changed:",Float.toString(sensorEvent.values[2]));
+                TextView textView = findViewById(R.id.RotationVectorSensorText);
+
+                textView.setText("RotationVector: " + Float.toString(sensorEvent.values[2]));
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+            }
+        };
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        sensorManager.registerListener(gyroscopeSensorListener,
-                gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(gyroscopeSensorListener, gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(rotationVectorSensorListener, rotationVectorSensor, SensorManager.SENSOR_DELAY_NORMAL);
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         sensorManager.unregisterListener(gyroscopeSensorListener);
+        sensorManager.unregisterListener(rotationVectorSensorListener);
     }
 
 
